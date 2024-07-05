@@ -44,15 +44,28 @@ class Post(db.Model):
     # Add validators
     @validates('content')
     def validate_content(self, key, content):
-        if len(content) >= 250:
+        if len(content) < 250:
             raise ValueError('Content must be at least 250 characters long')
         return content
     
     @validates('summary')
     def validate_summary(self, key, summary):
-        if len(summary) <= 250:
+        if len(summary) > 250:
             raise ValueError('Summary must be at most 250 characters long')
         return summary
+    
+    @validates('category')
+    def validate_category(self, key, category):
+        if category not in ['Fiction', 'Non-Fiction']:
+            raise ValueError('Category must be either Fiction or Non-Fiction.')
+        return category
+
+    @validates('title')
+    def validate_title(self, key, title):
+        clickbait_phrases = ['Won\'t Believe', 'Secret', 'Top', 'Guess']
+        if not any(phrase in title for phrase in clickbait_phrases):
+            raise ValueError('Title must contain at least one of the following: "Won\'t Believe", "Secret", "Top", "Guess"')
+        return title
 
 
     def __repr__(self):
