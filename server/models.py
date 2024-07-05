@@ -11,7 +11,12 @@ class Author(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    # Add validators 
+    # Add validators
+    @validates('name')
+    def validate_name(self, key, author):
+        if 'name' not in author:
+            raise ValueError("Failed simple name validation")
+        return author
 
     def __repr__(self):
         return f'Author(id={self.id}, name={self.name})'
